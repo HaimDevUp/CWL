@@ -1,0 +1,369 @@
+@import '@/styles/variables.scss';
+@import '@/styles/globals.scss';
+
+.product-card {
+    background: var(--color-global-white);
+    border-radius: $br;
+    padding: 1.6rem;
+    overflow: hidden;
+    text-align: center;
+    @include flex-column;
+    gap: 2.4rem;
+    flex-basis: max(33.33%, 35rem);
+
+    .image-container {
+        border-radius: $br $br 0 0;
+
+        span {
+            background: $background-color-black;
+            color: var(--color-global-white);
+            padding: 1.2rem 2rem;
+            border-radius: 0 0 $br-md $br-md;
+            font-size: 1.8rem;
+            font-weight: 700;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9;
+            line-height: 1;
+        }
+
+    }
+
+    &--content {
+        @include flex-column;
+        gap: 2.4rem;
+        height: 100%;
+
+        button {
+            margin-top: auto;
+        }
+
+        h4 {
+            font-weight: 700;
+        }
+    }
+}
+
+.offer-card {
+    background: var(--color-global-white);
+    border-radius: $br;
+    border: 1px solid var(--color-global-stroke);
+    overflow: hidden;
+    text-align: center;
+    flex-basis: 35rem;
+    position: relative;
+
+    @include mobile {
+        flex-basis: 100%;
+    }
+
+    &--cap {
+        width: 100%;
+        height: 4.8rem;
+        background: $background-color-blue;
+    }
+
+    &--content {
+        padding: 4.4rem 2.4rem;
+        @include flex-column;
+        gap: 2.4rem;
+        height: calc(100% - 4.8rem);
+    }
+
+    &--header {
+        height: 10rem;
+
+        h4 {
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        &-price {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1;
+            padding-top: 1.6rem;
+        }
+    }
+
+    &--address {
+        padding: 2.4rem 0;
+        @include flex-column;
+        gap: 0.8rem;
+        border-bottom: 1px solid var(--color-global-stroke);
+        border-top: 1px solid var(--color-global-stroke);
+        margin: auto 0;
+    }
+
+    &--bullet-markers {
+        @include flex-column;
+        gap: 1.6rem;
+        text-align: left;
+        position: relative;
+        max-height: 14rem;
+        overflow: hidden;
+
+        h5 {
+            font-weight: 500;
+        }
+
+    }
+
+    .show-more {
+        position: absolute;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 80%);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 20rem 0 2.4rem;
+        transition: all 0.3s ease;
+        @include flex-center;
+
+        svg {
+            transform: rotate(90deg);
+        }
+    }
+
+    &.is-open {
+        .offer-card--bullet-markers {
+            max-height: 100%;
+        }
+
+        .show-more {
+            background: none;
+
+            svg {
+                transform: rotate(270deg);
+            }
+        }
+    }
+}
+
+.checkout-card {
+    border-radius: $br;
+    border: 1px solid var(--color-global-stroke);
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    background: var(--color-global-white);
+    margin-bottom: 2.4rem;
+
+    &--cap {
+        width: 10%;
+        background: var(--color-primary);
+        flex-shrink: 0;
+    }
+
+    &--content {
+
+        h3 {
+            padding-bottom: 2.4rem;
+            border-bottom: 1px solid var(--color-global-stroke);
+            font-weight: 800;
+        }
+
+        padding: 4rem;
+        padding-right: 7rem;
+        @include flex-column;
+        gap: 2.4rem;
+    }
+
+    &--bullet-markers {
+        @include flex-column;
+        gap: 1.6rem;
+        position: relative;
+        $icon: var(--success-check-image);
+
+        span {
+            position: relative;
+
+            &:not(.bold) {
+                padding-left: 2.4rem;
+                line-height: 1;
+                color: var(--color-global-gray);
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 1.6rem;
+                    height: 1.6rem;
+                    background-image: $icon;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: cover;
+                    filter: invert(1);
+                }
+            }
+        }
+
+        .bold {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+    }
+}
+
+.breakdown-card {
+    border-radius: $br;
+    overflow: hidden;
+    @include flex-column;
+    gap: 1.6rem;
+    background: var(--color-global-white);
+    padding: 2.4rem;
+
+    @include desktop{
+        max-width: calc(25% - 3rem);
+        &.static{
+            position: fixed;
+        }
+    }
+
+    &-container{
+        position: relative;
+    }
+
+    
+
+    &--title {
+        font-weight: 800;
+        color: var(--color-global-stroke);
+    }
+
+    &--breakdown {
+        @include flex-column;
+        padding: 1.6rem 0;
+        border-bottom: 1px solid var(--color-global-stroke);
+        border-top: 1px solid var(--color-global-stroke);
+        display: grid;
+        grid-template-columns: 1fr auto;
+
+        &-amount {
+            font-weight: 300;
+            color: var(--color-global-gray);
+        }
+
+        .credit {
+            color: var(--color-state-success);
+        }
+    }
+
+    &--total {
+        @include flex-column;
+        gap: 0;
+        span{
+            font-weight: 800;
+        }
+        &-amount {
+            font-size: 3.2rem;
+            line-height: 1;
+        }
+    }
+}
+
+.order-card {
+    padding: 4rem;
+    border: 1px solid var(--color-global-stroke);
+    border-radius: $br;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.6rem;
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+    background: var(--color-global-white);
+
+    @include mobile{
+        grid-template-columns: 1fr;
+        padding: 2.4rem;
+    }
+
+    &--col {
+        display: flex;
+        flex-direction: column;
+        gap: 3.2rem;
+        justify-content: end;
+        @include mobile{
+            gap: .8rem;
+        }
+    }
+
+    &--center {
+        @include desktop{
+            text-align: center;
+            margin: 0 auto;
+        }
+    }
+
+    &--dates {
+        display: flex;
+        gap: .8rem;
+        align-items: center;
+
+        @include mobile{
+           flex-direction: column;
+        }
+
+        .spacer {
+            width: .1rem;
+            height: 1.6rem;
+            background-color: var(--color-global-gray);
+
+            @include mobile{
+                display: none;
+            }
+        }
+
+        button {
+            color: var(--color-state-error);
+            font-size: 1.2rem;
+            width: max-content;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    h4 {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    select{
+        padding:.8rem;
+        border-radius: $br-sm;
+    }
+
+}
+
+.credit-card{
+    background: var(--color-global-white);
+    border-radius: $br;
+    padding: 1.6rem;
+    border: 1px solid var(--color-global-stroke);
+    @include flex-column;
+
+    &--type{
+        @include flex-start;
+    }
+
+    &--holder{
+        font-weight: 600;
+    }
+
+    &--expires{
+        @include flex-start;
+        gap: 2.4rem;
+    }
+
+    &.default{
+        border: 2px solid var(--color-primary);
+        background-color: #DFE9FF;
+    }
+   
+}

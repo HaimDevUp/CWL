@@ -1,0 +1,88 @@
+@import '@/styles/globals.scss';
+
+.booking-summary {
+    @include flex-center;
+    flex-direction: column;
+    background-color: var(--color-global-white);
+    padding: 4rem 6.5rem;
+    border-radius: $br;
+    box-shadow: 0px 5px 22px 0px #0000000A;
+    box-shadow: 0px 0px 0px 0.5px #00000008;
+    max-width: 75rem;
+    margin: -5rem auto 0;
+    z-index: 9;
+    position: relative;
+    gap: 2rem;
+
+    @include mobile {
+        padding: 3rem 2rem;
+        max-width: 96%;
+    }
+
+
+    h4 {
+        font-weight: 800;
+        &.gray {
+            color: $gray;
+        }
+    }
+
+    &-msg {
+        border-bottom: 1px solid var(--color-global-stroke);
+        width: 100%;
+        text-align: center;
+        padding: 0 7rem 1rem;
+    }
+
+    &-content {
+        @include flex-center;
+        .show-qr{
+            display: grid;
+            grid-template-columns: 5fr 6fr;
+        }
+        gap: 2.4rem;
+        width: 100%;
+        align-items: center;
+        @include mobile {
+            justify-content: start;
+        }
+
+        img{
+            padding: 2rem;
+            border: 1px solid var(--color-global-stroke);
+        }
+
+        @include mobile {
+            grid-template-columns: 1fr;
+
+            img{
+                max-width: 80%;
+                margin: 0 auto;
+            }
+        }
+
+    }
+
+    &-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.6rem;
+
+        &-key {
+            font-weight: 800;
+        }
+
+        @include mobile {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .btn-primary {
+        padding-left: 7rem;
+        padding-right: 7rem;
+
+        @include mobile {
+            width: 100%;
+        }
+    }
+}

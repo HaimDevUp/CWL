@@ -1,0 +1,133 @@
+@import '@/styles/variables.scss';
+@import '@/styles/mixins.scss';
+
+.image-slider {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    &__container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: $br;
+    }
+
+    &__track {
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+        will-change: transform;
+    }
+
+    &__slide {
+        min-width: 100%;
+        padding-bottom: 100%;
+        position: relative;
+        overflow: hidden;
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    &__button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+        color: var(--color-primary, #000);
+
+        &:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        &:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        &--prev {
+            left: 1.6rem;
+        }
+
+        &--next {
+            right: 1.6rem;
+        }
+
+        @include mobile {
+            width: 3.2rem;
+            height: 3.2rem;
+
+            svg {
+                width: 1.6rem;
+                height: 1.6rem;
+            }
+
+            &--prev {
+                left: 0.8rem;
+            }
+
+            &--next {
+                right: 0.8rem;
+            }
+        }
+    }
+
+    &__dots {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 0 1.6rem;
+        position: absolute;
+        bottom: 1.6rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+    &__dot {
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        &.active {
+            background: var(--color-global-white, #fff);
+            width: 2.4rem;
+            border-radius: 0.4rem;
+        }
+    }
+}
+

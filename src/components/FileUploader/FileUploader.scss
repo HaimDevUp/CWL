@@ -1,0 +1,166 @@
+@import '@/styles/globals.scss';
+
+.file-uploader {
+  @include flex-column;
+  gap: 1.6rem;
+  width: 100%;
+
+  &-label {
+    font-size: 2.4rem;
+
+    .required {
+      color: var(--color-state-error);
+      margin-left: 0.4rem;
+    }
+  }
+
+  &-dropzone {
+    width: 100%;
+    border: 2px dashed var(--color-global-black);
+    border-radius: $br-md;
+    background: var(--color-global-white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 3.2rem;
+
+    &:hover {
+      border-color: var(--color-global-orange);
+    }
+
+    &.is-dragging {
+        border-color:var(--color-global-orange);
+        @include flex-center;
+    }
+
+    &-content {
+      @include flex-start;
+    }
+  }
+
+  &-input {
+    display: none;
+  }
+
+
+  &-text {
+    color: var(--color-global-gray);
+    margin: 0;
+    font-weight: 600;
+    @include flex-start;
+    gap: 0.8rem;
+
+
+    @include mobile {
+      font-size: 1.2rem;
+    }
+  }
+
+  &-link {
+    color: var(--color-global-orange);
+    cursor: pointer;
+  }
+
+  &-drag-text {
+    color: var(--color-global-orange);
+  }
+
+  &-error {
+    color: var(--color-state-error);
+    font-size: 1.2rem;
+    margin-top: -0.8rem;
+  }
+
+  &-loading {
+    color: var(--color-global-gray);
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  &-files {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    flex-wrap: wrap;
+
+    @include mobile {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &-file-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.2rem;
+    background: var(--color-global-white);
+    border: 1px solid var(--color-global-stroke);
+    border-radius: $br-md;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &-file-preview {
+    width: 4.8rem;
+    height: 4.8rem;
+    border-radius: $br-sm;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--color-global-gray-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &-file-icon {
+    width: 4.8rem;
+    height: 4.8rem;
+    border-radius: $br-sm;
+    background: var(--color-global-gray-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+      color: var(--color-global-gray);
+    }
+  }
+
+  &-file-info {
+    flex: 1;
+    min-width: 0;
+    @include flex-column;
+    gap: 0.4rem;
+  }
+
+  &-file-name {
+    font-size: 1.4rem;
+    font-weight: 500;
+    max-width: 12rem;
+    color: var(--color-global-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-file-size {
+    font-size: 1.2rem;
+    color: var(--color-global-gray);
+  }
+
+}
+

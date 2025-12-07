@@ -1,0 +1,10 @@
+@import '@/styles/globals.scss';
+
+.details{
+    .btn-primary{
+        margin-left: auto;
+        @include mobile {
+            width: 100%;
+        }
+    }
+}

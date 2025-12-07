@@ -1,0 +1,151 @@
+@import '../../../styles/globals.scss';
+
+.personal-area-- {
+
+    &balance-card {
+        border: 1px solid var(--color-global-stroke);
+        background: $background-color-error;
+        border-radius: $br;
+        padding: 4rem;
+
+        @include mobile {
+            padding: 2.4rem;
+        }
+
+        &-header {
+            @include flex-between;
+            padding-bottom: 4rem;
+
+            h4 {
+
+                strong {
+                    font-weight: 700;
+                }
+            }
+
+            &-balance {
+                font-weight: 700;
+                font-size: 2.4rem;
+                color: #BA0303;
+            }
+        }
+
+        &-content {
+            @include flex-between;
+
+            @include mobile {
+                gap: 1.6rem;
+            }
+
+            &-text {
+                max-width: 50rem;
+            }
+        }
+
+        &.good-balance {
+            background: $background-color-green;
+            border: 1px solid $border-color-green;
+
+            .personal-area--balance-card {
+                &-header {
+
+                    &-balance,
+                    h4 {
+                        color: var(--color-state-success);
+                    }
+                }
+
+                &-content {
+                    button {
+                        color: var(--color-state-success);
+                        background: var(--color-global-white);
+                    }
+                }
+            }
+        }
+    }
+
+    &payment-method-card {
+        background: var(--color-global-white);
+        border-radius: $br;
+        padding: 4rem;
+        border: 1px solid var(--color-global-stroke);
+        margin-bottom: 4rem;
+
+        @include mobile {
+            padding: 2.4rem;
+        }
+
+        &.default {
+            border: 1px solid var(--color-primary);
+        }
+
+        &-content {
+            display: flex;
+            gap: 2.4rem;
+            padding-bottom: 2.4rem;
+            border-bottom: 1px solid var(--color-global-stroke);
+
+            @include mobile {
+                flex-direction: column;
+                gap: 1.6rem;
+            }
+        }
+
+        &-col {
+            @include flex-column;
+
+            * {
+                @include flex-start;
+            }
+
+            &:first-child {
+                @include desktop {
+                    padding-right: 4rem;
+                }
+            }
+
+            &.expires {
+                @include mobile {
+                    flex-direction: row;
+                    gap: 2rem;
+                }
+            }
+
+            @include desktop {
+                &:last-child {
+                    margin-left: auto;
+                }
+            }
+        }
+
+        &-actions {
+            padding-top: 2.4rem;
+            @include flex-end;
+
+            @include mobile {
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+.top-up-amount-selector {
+    &-credit {
+        color: var(--color-global-gray);
+        font-size: 1.4rem;
+
+        strong {
+            color: var(--color-primary);
+        }
+    }
+}
+
+.top-up-note{
+    color: var(--color-global-gray);
+
+    .amount{
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+}

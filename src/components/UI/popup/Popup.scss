@@ -1,0 +1,145 @@
+@import '@/styles/globals.scss';
+
+.basic-pop-up {
+    display: flex;
+    flex-direction: column;
+    gap: 3.2rem;
+
+    @include mobile {
+        gap: 2.4rem;
+    }
+
+    h4 {
+        font-weight: 800;
+        border-bottom: 1px solid var(--color-global-stroke);
+        padding-bottom: 2.4rem;
+    }
+
+    &-content {
+        .iframe-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 400px;
+
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+    &-footer {
+        display: flex;
+        gap: 1.6rem;
+        justify-content: space-between;
+    }
+}
+
+.error-pop-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-icon {
+        font-size: 5rem;
+        color: var(--color-state-error);
+    }
+
+    &-content {
+        text-align: center;
+        padding: 1.6rem 0;
+    }
+}
+
+.footer-pop-up {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+
+    &-header {
+        @include flex-between;
+
+        @include mobile {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h4 {
+            font-weight: 700;
+        }
+    }
+}
+
+body:has(.home) .footer-pop-up {
+    color: var(--color-global-white);
+    padding: 3rem 0;
+    gap: 4.8rem;
+
+    @include mobile {
+        gap: 2.4rem;
+    }
+
+    &-header {
+        h4 {
+            font-size: 4rem;
+        }
+
+        button svg path {
+            fill: var(--color-global-white);
+            stroke: var(--color-global-white);
+        }
+    }
+}
+
+.payment-pop-up {
+    display: flex;
+    flex-direction: column;
+    gap: 3.2rem;
+
+    h4 {
+        font-weight: 800;
+        border-bottom: 1px solid var(--color-global-stroke);
+        padding-bottom: 2.4rem;
+    }
+
+    .btn-download {
+        width: max-content;
+        margin: 0 auto;
+    }
+
+    &--content {
+        .iframe-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 400px;
+
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+    &--card-list {
+        @include flex-column;
+        max-height: 50rem;
+        overflow-y: auto;
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .credit-card {
+            cursor: pointer;
+        }
+    }
+}
+
+.loader-pop-up {
+    padding: 5rem;
+}

@@ -1,0 +1,97 @@
+@import '../../styles/variables.scss';
+@import '../../styles/globals.scss';
+
+.login {
+    text-align: center;
+    margin: 10rem auto;
+
+    &--headline {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--color-primary);
+
+    }
+
+    &--site-title {
+        font-size: 4rem;
+        color: var(--color-primary);
+        text-transform: uppercase;
+    }
+
+    &--tagline {
+        font-size: 2.4rem;
+        color: var(--color-global-black);
+    }
+
+    &--form {
+        background: var(--color-global-white);
+        border-radius: $br;
+        width: 60rem;
+        max-width: 100%;
+        margin: 4rem auto 0;
+
+        &-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            button {
+                width: 100%;
+                padding: 1.7rem;
+                justify-content: center;
+                color: var(--color-global-gray);
+                border-bottom: 1px solid var(--color-global-stroke);
+                position: relative;
+
+
+                &.active {
+                    color: var(--color-primary);
+
+                    &:before {
+                        content: '';
+                        display: block;
+                        height: 3px;
+                        width: 100%;
+                        background-color: var(--color-primary);
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: -1.5px;
+                        border-radius: 100px;
+                        z-index: 9;
+                    }
+
+                    svg {
+                        path {
+                            stroke: var(--color-primary);
+                        }
+                    }
+                }
+            }
+        }
+
+        &-body {
+            padding: 3rem 3rem 6rem;
+            width: 40rem;
+            max-width: 100%;
+            margin: 0 auto;
+            text-align: left;
+
+            @include mobile {
+                padding: 3.2rem 2rem 4.4rem;
+            }
+
+            &-email,
+            &-sms {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary {
+                width: 100%;
+                margin-top: 2rem;
+            }
+        }
+    }
+}

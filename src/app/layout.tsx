@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { SiteProvider } from "@/components/SiteProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
+import { Header, PopupRenderer, Footer } from "@/components/UI";
+import { ToastContainer } from 'react-toastify';
+import { PopupProvider } from "@/contexts/PopupContext";
+import { FileUploaderProvider } from "@/contexts/FileUploaderContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,12 +18,35 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <SiteProvider>
+            <PopupProvider>
+              <FileUploaderProvider>
+                <Header />
+                <PopupRenderer />
+                {children}
+              <ToastContainer
+              position="bottom-left"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              />
+              <Footer />
+              </FileUploaderProvider>
+            </PopupProvider>
+          </SiteProvider>
+        </AuthProvider>
       </body>
     </html>
   );

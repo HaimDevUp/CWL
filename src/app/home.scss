@@ -1,0 +1,35 @@
+@import '../styles/variables.scss';
+@import '../styles/mixins.scss';
+@import '../styles/globals.scss';
+
+
+.home {
+
+    &--products {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 1.6rem;
+        margin-top: -4.6rem;
+        z-index: 9;
+        position: relative;
+        
+        > * {
+            flex: 0 1 auto;
+            min-width: 20rem;
+            max-width: 40rem;
+        }
+
+        &-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        @include mobile {
+            flex-direction: column;
+            margin-top: 4rem;
+        }
+    }
+
+    
+}

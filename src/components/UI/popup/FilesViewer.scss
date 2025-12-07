@@ -1,0 +1,194 @@
+@import '@/styles/variables.scss';
+
+.pdf-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.pdf-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.1s ease-out;
+}
+
+.pdf-viewer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .popup {
+      background: var(--color-global-white);
+      border-radius: $br;
+      box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.25);
+      max-width: 70vh;
+      width: 60rem;
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      color: var(--color-global-black);
+
+      &--header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 2rem;
+          h3 {
+              margin: 0;
+              font-size: 1.7rem;
+              font-weight: 700;
+              color: var(--color-primary);
+          }
+
+          .close-button {
+
+              img {
+                  width: 1.5rem;
+                  height: 1.5rem;
+              }
+          }
+      }
+
+      &--body {
+          padding: 2rem;
+          border-bottom: 1px solid var(--color-global-stroke);
+          border-top: 1px solid var(--color-global-stroke);
+
+          &--text {
+              max-width: 80%;
+          }
+
+          .checkbox-buttons {
+              display: flex;
+              gap: 1rem;
+              flex-wrap: wrap;
+              padding: 1.6rem 0;
+          }
+
+          .comment-container {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              padding-right: 2rem;
+              textarea {
+                  width: 100%;
+                  min-height: 6.5rem;
+                  border: 1px solid var(--color-global-stroke);
+                  border-radius: $br-sm;
+                  padding: 1rem;
+                  resize: none;
+                  color: #010101;
+                  &:focus {
+                      outline: none;
+                  }
+
+                  &::placeholder {
+                      color: var(--color-global-gray);
+                  }
+              }
+          }
+      }
+
+      &--footer {
+          display: flex;
+          justify-content: right;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 0 2rem;
+
+          button {
+              height: 100%;
+              font-size: 1.5rem;
+              padding: 1rem 1.8rem;
+          }
+      }
+
+      .files-popup {
+
+          &--preview {
+              padding: 2rem 0;
+              width: 100%;
+              padding-top: 80%;
+              position: relative;
+      
+              &-zoom {
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                  gap: 1rem;
+                  background-color: #00000099;
+                  color: #ECEDF0;
+                  align-items: center;
+                  padding: 1rem 0;
+                  font-size: 1.3rem;
+                  font-weight: 600;
+                  z-index: 1000;
+      
+                  button {
+                      width: 3rem;
+                      height: 3rem;
+                      border-radius: 50%;
+                      background-color: #ECEDF0;
+                      color: #919EAB;
+                      font-size: 2.5rem
+                  }
+              }
+          }
+      
+          &--footer {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              direction: rtl;
+      
+              &--arrows {
+                  display: flex;
+                  align-items: center;
+      
+                  svg {
+                      width: 1.7rem;
+                      height: 1.7rem;
+                  }
+              }
+      
+              &-current {
+                  display: flex;
+                  align-items: center;
+      
+                  &-count {
+                      font-size: 1.3rem;
+                      color: var(--color-global-gray);
+                  }
+              }
+          }
+      
+      }
+
+  }
+}
