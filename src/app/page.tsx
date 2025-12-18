@@ -12,8 +12,9 @@ import { footerPopUp } from '@/components/UI/popup/footerPopUp';
 import { DateField } from '@/components/inputs';
 import isBefore from 'date-fns/isBefore';
 import startOfToday from 'date-fns/startOfToday';
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { formatDateForUrl } from '@/utils/dateUtils';
+import Loader from 'rsuite/esm/Loader';
 
 
 
@@ -32,26 +33,34 @@ export default function Home() {
   const { products } = homepage;
   const router = useRouter();
   const { open, close } = usePopup();
-  const [entryDate, setEntryDate] = useState<Date | null>(new Date());
-  const [exitDate, setExitDate] = useState<Date | null>(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000));
+  const [entryDate, setEntryDate] = useState<Date >(new Date());
+  const [exitDate, setExitDate] = useState<Date >(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000));
+  const entryDateRef = useRef<Date>(entryDate);
+  const exitDateRef = useRef<Date>(exitDate);
+  const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    entryDateRef.current = entryDate;
+  }, [entryDate]);
+
+  useEffect(() => {
+    exitDateRef.current = exitDate;
+  }, [exitDate]);
+
+  const shouldDisableExitDate = useCallback((date: Date) => {
+    return isBefore(date, entryDateRef.current);
+  }, []);
 
   const handleReservationClick = () => {
-    // Reset dates when opening the popup
-    const initialEntryDate = new Date();
-    const initialExitDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
-    setEntryDate(initialEntryDate);
-    setExitDate(initialExitDate);
-
     
-
     const handleGetPrice = () => {
-      if (entryDate && exitDate) {
-        const entryFormatted = formatDateForUrl(entryDate);
-        const exitFormatted = formatDateForUrl(exitDate);
+      if (entryDateRef.current && exitDateRef.current) {
+        setIsLoading(true);
+        const entryFormatted = formatDateForUrl(entryDateRef.current);
+        const exitFormatted = formatDateForUrl(exitDateRef.current);
         const url = `/search-results?type=reservation&entry=${encodeURIComponent(entryFormatted)}&exit=${encodeURIComponent(exitFormatted)}`;
-        close();
         router.push(url);
+        close();
       }
     };
 
@@ -61,15 +70,16 @@ export default function Home() {
           icon="entry" 
           label="Entry Date & Time" 
           shouldDisableDate={date => isBefore(date, startOfToday())} 
-          defaultValue={initialEntryDate}
-          onChange={setEntryDate}
+          defaultValue={entryDate}
+          onChange={(date) => date && setEntryDate(date)}
         />
         <DateField 
           icon="exit" 
           label="Exit Date & Time" 
-          shouldDisableDate={date => isBefore(date, startOfToday())} 
-          defaultValue={initialExitDate}
-          onChange={setExitDate}
+          shouldDisableDate={shouldDisableExitDate} 
+          defaultValue={exitDate}
+          onChange={(date) => date && setExitDate(date)}
+          key={entryDate.getTime()}
         />
         <button 
           className="btn-primary" 
@@ -114,7 +124,11 @@ export default function Home() {
     }
   ].filter(Boolean) as Product[]
 
+if (isLoading) {
+  return <Loader />;
+}
 
+const isSingleProduct = offers.length === 1;
   return (
     <div className="home">
 
@@ -122,14 +136,14 @@ export default function Home() {
 
       <div className="container">
         <div className="home--products-container">
-          <div className="home--products">
+          <div className={`home--products ${offers.length === 1 ? 'one-product' : ''}`}>
             {offers.map((product) => (
-              <ProductCard key={product.title} product={product} />
+              <ProductCard key={product.title} product={product} fullWidth={isSingleProduct}/>
             ))}
           </div>
         </div>
 
-        <PromotionalFooter benefits={homepage.display.promotional_footer.content.map(item => item.description)} sliderImages={homepage.display.images_slider} />
+        {homepage.display.promotional_footer.show && <PromotionalFooter benefits={homepage.display.promotional_footer.content.map(item => item.description)} sliderImages={homepage.display.images_slider} />}
       </div>
     </div>
   );

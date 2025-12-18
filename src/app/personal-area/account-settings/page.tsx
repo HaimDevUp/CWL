@@ -96,30 +96,6 @@ export default function AccountSettingsPage() {
     const handleSaveRef = useRef<() => Promise<boolean>>(async () => false);
     const [initialOpenVehicleIndex, setInitialOpenVehicleIndex] = useState<number | null>(null);
     const hasScrolledRef = useRef(false);
-    console.log('isDirty', isDirty);
-
-    // Handle vehicle plate from query parameter
-    useEffect(() => {
-        const vehiclePlate = searchParams.get('vehiclePlate');
-        if (vehiclePlate && formData.vehicles.length > 0 && !hasScrolledRef.current) {
-            const vehicleIndex = formData.vehicles.findIndex(v => v.plate === vehiclePlate);
-            console.log('vehicleIndex', vehicleIndex);
-
-            // If vehicle found, open its accordion
-            if (vehicleIndex !== -1) {
-                setInitialOpenVehicleIndex(vehicleIndex);
-            }
-
-            hasScrolledRef.current = true;
-            setTimeout(() => {
-                vehiclesSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 300);
-
-            router.replace('/personal-area/account-settings', { scroll: false });
-        } else if (!vehiclePlate) {
-            hasScrolledRef.current = false;
-        }
-    }, [searchParams, formData.vehicles, router]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -156,6 +132,28 @@ export default function AccountSettingsPage() {
             setIsDirty(false);
         }
     }, []);
+
+    // Handle vehicle plate from query parameter
+    useEffect(() => {
+        const vehiclePlate = searchParams.get('vehiclePlate');
+        if (vehiclePlate && vehicles.length > 0 && !hasScrolledRef.current) {
+            const vehicleIndex = vehicles.findIndex(v => v.plate === vehiclePlate);
+
+            // If vehicle found, open its accordion
+            if (vehicleIndex !== -1) {
+                setInitialOpenVehicleIndex(vehicleIndex);
+            }
+
+            hasScrolledRef.current = true;
+            setTimeout(() => {
+                vehiclesSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+
+            router.replace('/personal-area/account-settings', { scroll: false });
+        } else if (!vehiclePlate) {
+            hasScrolledRef.current = false;
+        }
+    }, [searchParams, formData, router]);
 
     const updateField = (field: keyof FormData) => (value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));

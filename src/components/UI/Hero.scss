@@ -15,7 +15,7 @@
 
     &--content {
         position: absolute;
-        top: 40%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
@@ -29,6 +29,7 @@
             font-size: 6.4rem;
             font-weight: 500;
             color: var(--color-global-white);
+            line-height: 1.1;
 
             @include mobile {
                 font-size: 3rem;

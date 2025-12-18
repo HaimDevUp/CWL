@@ -76,14 +76,36 @@ export const PurchaseResponseSchema = z.object({
   credentials: PurchaseCredentialsSchema,
 });
 
-export const UploadFileRequestSchema = z.object({
-  contentType: z.string(),
+export const initiateFileRequestSchema = z.object({
+  files: z.array(z.object({
+    fileId: z.string(),
+    contentType: z.string(),
+  })),
 });
 
-export const UploadFilesResponseSchema = z.object({
+export const initiateFilesResponseSchema = z.object({
+  files: z.array(z.object({
     fileId: z.string(),
     uploadUrl: z.string(),
+  })),
 });
+
+export const uploadFilesRequestSchema = z.array(z.object({
+  fileId: z.string(),
+  uploadUrl: z.string(),
+  content: z.any(),
+  contentType: z.string(),
+  name: z.string(),
+}));
+
+export interface UploadResult {
+  fileId: string;
+  contentType: string;
+  success: boolean;
+  name: string;
+  error?: string;
+  response?: Response;
+}
 
 
 export type PurchaseData = z.infer<typeof PurchaseDataSchema>;
@@ -92,6 +114,7 @@ export type PurchaseResponse = z.infer<typeof PurchaseResponseSchema>;
 // Type exports
 export type Breakdown = z.infer<typeof BreakdownSchema>;
 export type OfferTile = z.infer<typeof OfferTileSchema>;
-export type UploadFileRequest = z.infer<typeof UploadFileRequestSchema>;
-export type UploadFilesResponse = z.infer<typeof UploadFilesResponseSchema>;
+export type initiateFileRequest = z.infer<typeof initiateFileRequestSchema>;
+export type initiateFilesResponse = z.infer<typeof initiateFilesResponseSchema>;
+export type uploadFilesRequest = z.infer<typeof uploadFilesRequestSchema>;
 

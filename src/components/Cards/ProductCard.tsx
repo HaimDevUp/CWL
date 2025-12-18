@@ -3,12 +3,13 @@ import { Product } from '@/app/page';
 
 interface ProductCardProps {
     product: Product
+    fullWidth: boolean;
     className?: string;
 }
 
-export const ProductCard = ({ product, className }: ProductCardProps) => {
+export const ProductCard = ({ product, fullWidth=false, className }: ProductCardProps) => {
     return (
-        <div className={`product-card ${className}`}>
+        <div className={`product-card ${fullWidth ? 'full-width' : ''} ${className}`}>
             <div className="image-container">
                 <img src={product.image} alt={product.title} />
                 {product.notice && <span>{product.notice}</span>}

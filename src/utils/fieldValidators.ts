@@ -94,7 +94,6 @@ export function validateDigits(
             error: `${label} must be only digits`,
         };
     }
-    
     const length = trimmedValue.length;
     
     // Check exact length
@@ -117,7 +116,6 @@ export function validateDigits(
             };
         }
     }
-    
     // Check min length
     if (options?.minLength !== undefined && length < options.minLength) {
         return {
@@ -125,7 +123,6 @@ export function validateDigits(
             error: `${label} must be at least ${options.minLength} digits`,
         };
     }
-    
     // Check max length
     if (options?.maxLength !== undefined && length > options.maxLength) {
         return {
@@ -133,7 +130,6 @@ export function validateDigits(
             error: `${label} must be at most ${options.maxLength} digits`,
         };
     }
-    
     return { isValid: true };
 }
 

@@ -91,7 +91,7 @@ export function useFileUploader() {
 
       for (const file of newFiles) {
         const base64Data = await fileToBase64(file);
-        const fileId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const fileId = crypto.randomUUID();
         
         const storedFile: StoredFile = {
           id: fileId,

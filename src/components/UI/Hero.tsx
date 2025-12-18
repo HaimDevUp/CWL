@@ -22,7 +22,7 @@ const Hero = ({ backgroundImage, text, textHighlight, options }: HeroProps) => {
             </div>
             <div className={`hero--content ${options?.backgroundColor ? 'hero--content-with-bg' : ''}`}>
                 {options?.icon && <div className="hero--content-icon">{options.icon}</div>}
-                <h1 dangerouslySetInnerHTML={{ __html: text }} />
+                <h1><span>{text}</span>{textHighlight}</h1>
                 {options?.backgroundColor && <div className="hero--content-bg" style={{ backgroundColor: options.backgroundColor }}></div>}
             </div>
         </div>

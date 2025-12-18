@@ -70,6 +70,7 @@ const CheckoutPage = () => {
         return <Loader />;
     }
     const showbreakdown = breakdown.total.incVat > 0;
+    const filesRequired = offer.options?.files?.required || false;
     return (
         <div className="container">
             <div className={`${showbreakdown ? 'split-panel' : 'panel'}`}>
@@ -77,7 +78,7 @@ const CheckoutPage = () => {
                     <CheckoutCard title={offer?.ui.title || ''} bulletMarkers={offer?.ui.bulletMarkers || []} />
                     {offer.options?.files?.enabled && <FileUploader
                             label="Certification of Eligibility"
-                            required={offer.options?.files?.required || false}
+                            required={filesRequired}
                         />
                     }
                 </div>
@@ -87,7 +88,7 @@ const CheckoutPage = () => {
                     breakdown={breakdown}
                     isStatic={true}
                     onClick={() => router.push(`/details?offerId=${offerId}`)}
-                    disabled={files.length === 0}
+                    disabled={files.length === 0 && filesRequired}
                 />}
             </div>
         </div>

@@ -3,6 +3,7 @@ import api from './index';
 import { getUserIdFromToken } from '../utils/jwtUtils';
 import { ProfileResponse, ProfileUpdate, LookupOptionSchema, InitCardResponse, HppStatusResponse, Transaction } from '../schemas/profileSchemas';
 import { z } from 'zod';
+import { UploadResult } from '@/schemas/productsSchemas';
 
 const BASE_URL = '/api/v1/web/accounts';
 const LOOKUP_BASE_URL = '/api/v1/lookups';
@@ -57,6 +58,11 @@ export async function downloadTransactions(from?: string, to?: string) {
     return api.getBlob(url);
 }
 
+export async function getfileUrl(fileId: string, protocol: string): Promise<{downloadUrl: string}> {
+    const id = getUserId();
+    return api.get<{downloadUrl: string}>(`${BASE_URL}/${id}/files/${fileId}/?protocol=${protocol}`);
+}
+
 //wallet
 export async function addMoneyToBalance(amount: number): Promise<ProfileResponse> {
     const id = getUserId();
@@ -98,6 +104,60 @@ export async function deleteVehicle(plate: string): Promise<ProfileResponse> {
 export async function updateContactInfo(contactData: ProfileUpdate): Promise<ProfileResponse> {
     const id = getUserId();
     return api.put(`${BASE_URL}/${id}/profile`, contactData);
+}
+
+export interface AttachFileResult {
+    fileId: string;
+    name: string;
+    success: boolean;
+    error?: string;
+}
+
+export async function attachFiles(orderId: string, files: Array<{fileId: string, name: string, contentType: string}>): Promise<AttachFileResult[]> {
+    const id = getUserId();
+    
+    // Attach all files in parallel and wait for all to complete
+    const attachPromises = files.map(async (file): Promise<AttachFileResult> => {
+        try {
+            await api.post(`${BASE_URL}/${id}/files`, {
+                fileId: file.fileId,
+                contentType: file.contentType,
+                name: file.name,
+                orderId: orderId,
+            });
+
+            return {
+                fileId: file.fileId,
+                name: file.name,
+                success: true,
+            };
+        } catch (error: any) {
+            return {
+                fileId: file.fileId,
+                name: file.name,
+                success: false,
+                error: error?.response?.data?.message || error?.message || 'Unknown error occurred',
+            };
+        }
+    });
+
+    // Wait for all attachments to complete (even if some fail)
+    const results = await Promise.allSettled(attachPromises);
+    
+    // Extract results from Promise.allSettled format
+    return results.map((result, index) => {
+        if (result.status === 'fulfilled') {
+            return result.value;
+        } else {
+            // If the promise itself was rejected (shouldn't happen since we catch errors)
+            return {
+                fileId: files[index].fileId,
+                name: files[index].name,
+                success: false,
+                error: result.reason instanceof Error ? result.reason.message : 'Promise rejected',
+            };
+        }
+    });
 }
 
 

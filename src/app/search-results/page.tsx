@@ -160,7 +160,7 @@ const SearchResultsPage = () => {
                     ))}
                 </div>
 
-                <PromotionalFooter benefits={homepage.display.promotional_footer.content.map(item => item.description)} sliderImages={homepage.display.images_slider} />
+                {homepage.display.promotional_footer.show && <PromotionalFooter benefits={homepage.display.promotional_footer.content.map(item => item.description)} sliderImages={homepage.display.images_slider} />}
             </div>
         </div>
     )

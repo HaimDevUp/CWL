@@ -1,10 +1,11 @@
 'use client';
 import { useOffers } from '@/hooks/useOffers';
-import { OfferTile, Breakdown, PurchaseData, UploadFileRequest } from '@/schemas/productsSchemas';
+import { OfferTile, Breakdown, PurchaseData, initiateFileRequest, uploadFilesRequest } from '@/schemas/productsSchemas';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Loader } from '@/components/UI/Loader';
-import { calculateBreakdown, Purchase, validateOrder, uploadFiles } from '@/api/products';
+import { calculateBreakdown, Purchase, validateOrder, initiateFiles, uploadFilesS3 } from '@/api/products';
+import { attachFiles } from '@/api/user';
 import { BreakdownCard } from '@/components/Cards/Breakdown';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { FileUploader } from '@/components/FileUploader';
@@ -88,9 +89,9 @@ const DetailsPage = () => {
     const { getContactInfo, user, getVehicles, isLoading: isAuthLoading } = useUserProfile();
     const [formData, setFormData] = useState<FormData>(initialFormData);
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
-    const { lookUpOptions, isAuthenticated, login } = useAuth();
+    const { lookUpOptions, isAuthenticated, login, refreshUserData } = useAuth();
     const { open, close } = usePopup();
-    const { files } = useFileUploaderContext();
+    const { files, clearFiles } = useFileUploaderContext();
     const [hasError, setHasError] = useState(false);
 
     const contactInfo = getContactInfo();
@@ -113,12 +114,12 @@ const DetailsPage = () => {
                     const breakdownData = await calculateBreakdown(offerId, formData.topUp);
                     setBreakdown(breakdownData);
                 }
-                else{
+                else {
                     open(ErrorPopUp('Error', <>{'Offer not found'}</>, () => { router.push('/'); close() }), { maxWidth: 400 });
                     setHasError(true);
                 }
             } catch (error) {
-                open(ErrorPopUp('Error', <>{'Offer not found'}</>, () => { router.push('/'); close() }), { maxWidth: 400 });    
+                open(ErrorPopUp('Error', <>{'Offer not found'}</>, () => { router.push('/'); close() }), { maxWidth: 400 });
                 setHasError(true);
             } finally {
                 setIsLoading(false);
@@ -278,17 +279,30 @@ const DetailsPage = () => {
 
                             const purchaseResult = await Purchase({ ...purchaseData, paymentMethod });
                             console.log('purchaseResult', purchaseResult);
+                            setIsLoading(false);
+
                             if (purchaseResult.credentials.accessToken && purchaseResult.credentials.refreshToken) {
                                 await login(purchaseResult.credentials.accessToken, purchaseResult.credentials.refreshToken);
+
+                                if (offer?.options.files?.enabled && files.length > 0) {
+                                    open(LoaderPopUp('Uploading files...'), { maxWidth: 400, disableClose: true });
+                                    const uploadFilesResult = await uploadFiles(purchaseResult.order.id);
+                                    await refreshUserData();
+                                    if (uploadFilesResult.success) {
+                                        router.push(`/thank-you?orderId=${purchaseResult.order.id}`);
+                                        close();
+                                    }
+                                    else {
+                                        const errorsDiv = <div>
+                                            <div>The following files were not uploaded because of some errors:</div>
+                                            <ul>
+                                                {uploadFilesResult.errors?.map(error => <li key={error.fileNeme}>{error.fileNeme}</li>)}
+                                            </ul>
+                                        </div>;
+                                        open(ErrorPopUp('Error', errorsDiv, () => { router.push(`/thank-you?orderId=${purchaseResult.order.id}`); close()}), { maxWidth: 400 });
+                                    }
+                                }
                             }
-                            router.push(`/thank-you?orderId=${purchaseResult.order.id}`);
-
-
-                            //TODO: 
-                            // if(offer?.options.files?.enabled && files.length > 0) {
-                            //     const uploadFilesResult = await initiateUploadFiles();
-                            // }
-                            setIsLoading(false);
                         } catch (err) {
                             open(ErrorPopUp('Error', <>{String(err)}</>, close), { maxWidth: 400 });
                             setHasError(true);
@@ -313,13 +327,56 @@ const DetailsPage = () => {
         }
     };
 
-    const initiateUploadFiles = async () => {
-        const uploadFilesRequest: UploadFileRequest[] = files.map(file => ({
-            contentType: file.data,
+    const uploadFiles = async (orderId: string) => {
+        const initiateFilesRequest: initiateFileRequest = {
+            files: files.map(file => ({
+                fileId: file.id,
+                contentType: file.type,
+            }))
+        };
+        const initiateFilesResponse = await initiateFiles(initiateFilesRequest);
+
+        const uploadFilesRequest: uploadFilesRequest = files.map((file, index) => ({
+            fileId: file.id,
+            uploadUrl: initiateFilesResponse.files[index].uploadUrl,
+            content: file.data,
+            contentType: file.type,
+            name: file.name,
         }));
-        const result = await uploadFiles(uploadFilesRequest);
-        console.log('result', result);
-        return result;
+        const uploadFilesResponse = await uploadFilesS3(uploadFilesRequest);
+
+        const errors = []
+        const success = []
+
+        for (const file of uploadFilesResponse) {
+            if (file.success) {
+                success.push({ fileId: file.fileId, name: file.name, contentType: file.contentType });
+            }
+            else {
+                errors.push({ fileNeme: file.name, error: file.error });
+            }
+        }
+
+        if (success.length > 0) {
+            const attachFilesResponse = await attachFiles(orderId, success);
+
+
+            const attachSuccess = []
+
+            for (const file of attachFilesResponse) {
+                if (file.success) {
+                    attachSuccess.push(file);
+                }
+                else {
+                    errors.push({ fileNeme: file.name, error: file.error });
+                }
+            }
+        }
+
+        await clearFiles();
+
+
+        return errors && errors.length > 0 ? { errors: errors, success: false } : { success: true };
     }
 
     if (hasError) {
@@ -480,7 +537,7 @@ const DetailsPage = () => {
             onChange: updateField('openAnAccount', true),
             error: errors.openAnAccount,
             disabled: false,
-            display: offer?.type == "reservation",
+            display: false,
         },
     ];
 
@@ -538,7 +595,7 @@ const DetailsPage = () => {
     const TopupFields: Field[] = [
         {
             key: 'topUp',
-            label: 'You can top up your wallet or continue without topping up',
+            label: `Select the amount below to add to your debit (wallet) account. <br>But there is an option to use it per transaction or if the consumer doesn't have enough funds in the wallet.`,
             type: 'topup',
             value: formData.topUp,
             isRequired: offer?.options.walletTopUp?.required || false,
@@ -547,7 +604,8 @@ const DetailsPage = () => {
             disabled: false,
             display: offer?.options.walletTopUp?.enabled || false,
         },
-    ]
+    ];
+
     const vehicleFields = [
         {
             key: 'plate',
@@ -564,13 +622,18 @@ const DetailsPage = () => {
         {
             key: 'cardNumber',
             label: 'Card',
-            type: 'number',
+            type: 'text',
             value: formData.cardNumber,
             isRequired: false,
-            onChange: updateField('cardNumber'),
+            onChange: (value: string) => {
+                // Only allow digits, limit to 11 characters
+                const numericOnly = value.replace(/\D/g, '');
+                const limitedValue = numericOnly.slice(0, 11);
+                updateField('cardNumber')(limitedValue);
+            },
             error: errors.cardNumber,
             disabled: false,
-            validation: validateDigits(formData.cardNumber, 'Card'),
+            validation: validateDigits(formData.cardNumber, 'Card', { exactLength: 11 }),
         },
     ]
 

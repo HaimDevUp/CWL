@@ -121,7 +121,7 @@ const ThankYouPage = () => {
     const uiData = getHeroProps(order?.result?.status || '', order?.offer?.type || '');
 
     return (
-        <div>
+        <div className="thank-you-page">
             <Hero {...uiData.Hero} />
             <div className="booking-summary">
                 <h4 className="gray">{registration?.custom_labels?.booking_summary_label || 'Summary'}</h4>

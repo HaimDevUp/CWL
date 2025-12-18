@@ -153,7 +153,7 @@ export const OptionsSchema = z.object({
 export const ResultSchema = z.object({
   status: z.string(),
   details: z.string().nullable(),
-  missingInfo: z.string().nullable(),
+  missingInfo: z.union([z.string(), z.record(z.string(), z.any())]).nullable(),
 });
 
 // Order schema

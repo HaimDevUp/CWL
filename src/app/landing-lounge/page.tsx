@@ -8,19 +8,12 @@ import { useEffect, useState } from "react";
 import '../search-results/search-results.scss';
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import Hero from "@/components/UI/Hero";
-import { PromotionalFooter } from "@/components/Cards/PromotionalFooter";
 import { useOffers } from "@/hooks/useOffers";
 import { usePopup } from "@/contexts/PopupContext";
 import { ErrorPopUp } from "@/components/UI/popup/ErrorPopUp";
-import { DateField } from "@/components/inputs";
-import { formatDateTime, parseDateFromUrl } from "@/utils/dateUtils";
-import { useIsMobile } from '@/hooks/useIsMobile';
-import EntryIcon from '@/assets/icons/EntryIcon.svg';
-import ExitIcon from '@/assets/icons/ExitIcon.svg';
-import Arrow from '@/assets/icons/arrow.svg';
 
 
-const SearchResultsPage = () => {
+const LandingLoungePage = () => {
     const searchParams = useSearchParams();
     const entry = searchParams.get('entry');
     const exit = searchParams.get('exit');
@@ -30,7 +23,6 @@ const SearchResultsPage = () => {
     const router = useRouter();
     const [openOffers, setOpenOffers] = useState<string[]>([]);
     const { open, close } = usePopup();
-    const isMobile = useIsMobile();
 
     useEffect(() => {
         const fetchOffersData = async () => {
@@ -100,4 +92,4 @@ const SearchResultsPage = () => {
     )
 }
 
-export default SearchResultsPage;
+export default LandingLoungePage;

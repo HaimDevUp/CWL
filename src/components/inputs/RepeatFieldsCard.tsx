@@ -48,8 +48,6 @@ export const RepeatFieldsCard = ({
         setOpenRows(openRows.includes(index) ? openRows.filter((i) => i !== index) : [...openRows, index]);
     }
 
-    console.log('openRows', openRows);
-
     return (
         <div className="fields-card">
             <div className="fields-card-header is-open">

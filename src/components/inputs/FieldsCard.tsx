@@ -73,7 +73,7 @@ export const FieldsCard = ({
             <div className={`fields-card-content ${isOpen ? 'is-open' : ''}`}>
                 {fields?.map((field) => (
                     field.display !== false && <div className="fields-card-field" key={field.key}>
-                        <span>{field.label} {field.isRequired ? <span className="required">*</span> : ''}</span>
+                        <span>{field.isRequired ? <span className="required">*</span> : ''} {field.label}</span>
                         {field.type === 'select' ? (
                             <select
                                 value={typeof field.value === 'boolean' ? '' : String(field.value || '')}
@@ -137,7 +137,7 @@ export const FieldsCard = ({
                     <div style={{ gridColumn: 'span 2' }}>
                         {topup?.map((field) => (
                             <div className="fields-card-field" key={field.key}>
-                                <span>{field.label}</span>
+                                <span dangerouslySetInnerHTML={{ __html: field.label }} />
                                 <div className="top-up-options">
                                     {TOP_UP_AMOUNTS.map((amount) => (
                                         <label key={amount} className="top-up-option">

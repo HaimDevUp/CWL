@@ -11,13 +11,14 @@ import FilesPopUp from '@/components/UI/popup/FilesPopUp';
 import TrashIcon from '@/assets/icons/trash.svg';
 import EditIcon from '@/assets/icons/edit.svg';
 import { useRouter } from 'next/navigation';
-import { deleteVehicle } from '@/api/user';
+import { deleteVehicle, getfileUrl } from '@/api/user';
 import { useAuth } from '@/contexts/AuthContext';
 import { showSuccess } from '@/utils/toastUtils';
 import { ErrorPopUp } from '@/components/UI/popup/ErrorPopUp';
 import { BasicPopUp } from '@/components/UI/popup/BasicPopUp';
 import { Loader } from '@/components/UI/Loader';
 import { usePopup } from '@/contexts/PopupContext';
+import { LoaderPopUp } from '@/components/UI/popup/LoaderPopUp';
 
 
 
@@ -89,10 +90,25 @@ export default function ProductInformationPage() {
         setOpenOrderAccordion(openOrderAccordion === orderId ? null : orderId);
     };
 
-    const handleFilesClick = (files: any[]) => {
-        setSelectedFiles(files);
-        setShowFilesPopup(true);
-    };
+    const handleFilesClick = async (files: any[]) => {
+        try {
+            open(LoaderPopUp('Loading files...'), { maxWidth: 400 });
+            const urlPromises = files.map(file => getfileUrl(file.id, 'presigned-url'));
+            const urls = await Promise.all(urlPromises);
+            const filesWithUrls = files.map((file, index) => ({
+                ...file,
+                url: urls[index].downloadUrl
+            }));
+            setSelectedFiles(filesWithUrls);
+            console.log(filesWithUrls);
+            close();
+            setShowFilesPopup(true);
+
+
+        } catch (error) {
+            open(ErrorPopUp('Error', <>{String(error)}</>, close), { maxWidth: 400 });
+        }
+    }
 
     const handleEditVehicle = (plate: string) => {
         router.push(`/personal-area/account-settings?vehiclePlate=${encodeURIComponent(plate)}`);
